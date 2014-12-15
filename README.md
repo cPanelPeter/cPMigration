@@ -14,7 +14,7 @@ cPMigration is not officially supported by cPanel, Inc.  It is developed and mai
     ./cpmig -s <hostname or ip> [options]
         
     required:
-    -s <hostname or ip>, sourceserver
+    -s <hostname or ip of sourceserver>
 
     optional:
     -p sourceport    

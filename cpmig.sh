@@ -30,7 +30,7 @@ print_help(){
   echo './cpmig -s <hostname or ip>'
   echo
   echo 'required:'
-  echo '-s ,<hostname or ip>, sourceserver'
+  echo '-s <hostname or ip of sourceserver>'
   echo
   echo 'optional:'
   echo '-a <username or domain>, specify single account'
@@ -70,7 +70,8 @@ generate_accounts_list(){
   sort /etc/trueuserdomains > $scripthome/.destdomains
   
   # diff out the two lists,  parse out usernames only and remove whitespace.  Output to copyaccountlist :)
-  copyaccountlist="`diff -y $scripthome/.sourcedomains $scripthome/.destdomains | grep \< | awk -F':' '{ print $2 }' | sed -e 's/^[ \t]*//' | awk -F' ' '{ print $1 }' | grep -v \"cptkt\" `"
+  # cptkt is now just cp - PSE 7/24/2014
+  copyaccountlist="`diff -y $scripthome/.sourcedomains $scripthome/.destdomains | grep \< | awk -F':' '{ print $2 }' | sed -e 's/^[ \t]*//' | awk -F' ' '{ print $1 }' | grep -v \"cp\" `"
 }
 
 mkdir_ifneeded(){
@@ -400,6 +401,11 @@ update_ipdata(){
   destnextavailableip="`cat $scripthome/.ipdatadest | grep -e "<used>0" | grep -e "<dedicated>1" | awk '{print $5}' | sed 's/<[^>]\+>//g' | head -1`"
   
 }
+
+# This section will need to be redone. Somewhere around 11.40, a one line comment was added to
+# the /$scripthome/.ipdatadest and .ipdatasource files So it now calculates the # domainips v1 
+# comment line as an IP.  We most likely need to fix above where we do the count by adding 
+# a grep -v or possibly a head command - PSE 7/24/2014
 
 check_dedicatedips(){
   if [[ $sourcededicatedipcount -eq  0 ]]; then
